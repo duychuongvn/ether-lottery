@@ -77,9 +77,9 @@ describe('Test', async () => {
         console.log("A5: "+await toEther(web3.eth.getBalance(accounts[5]).toNumber()))
         console.log("A6: "+await toEther(web3.eth.getBalance(accounts[6]).toNumber()))
         console.log("A7: "+await toEther(web3.eth.getBalance(accounts[7]).toNumber()))
-        contract.init({from:contractOwner, value:toWei(4)});
+        contract.init({from:contractOwner, value:toWei(1.01)});
         contract.buyTickets([8,9,7], {from:accounts[1], value: toWei(3)})
-        contract.buyTickets([8,7], {from:accounts[1], value: toWei(3)})
+        contract.buyTickets([7], {from:accounts[1], value: toWei(3)})
         contract.buyTickets([6,2], {from:accounts[2], value: toWei(3)})
         contract.buyTickets([8,1], {from:accounts[3], value: toWei(3)})
         contract.buyTickets([6], {from:accounts[4], value: toWei(3)})
@@ -88,8 +88,7 @@ describe('Test', async () => {
         contract.buyTickets([2,6, 0], {from:accounts[7], value: toWei(3)})
 
         console.log("===Balance after buying ticket====")
-        console.log(await toEther(web3.eth.getBalance(contract.address).toNumber()))
-        console.log(await toEther(web3.eth.getBalance(contractOwner).toNumber()))
+        console.log("Owner: ",await toEther(web3.eth.getBalance(contractOwner).toNumber()))
         console.log("A1: "+await toEther(web3.eth.getBalance(accounts[1]).toNumber()))
         console.log("A2: "+await toEther(web3.eth.getBalance(accounts[2]).toNumber()))
         console.log("A3: "+await toEther(web3.eth.getBalance(accounts[3]).toNumber()))
@@ -97,7 +96,7 @@ describe('Test', async () => {
         console.log("A5: "+await toEther(web3.eth.getBalance(accounts[5]).toNumber()))
         console.log("A6: "+await toEther(web3.eth.getBalance(accounts[6]).toNumber()))
         console.log("A7: "+await toEther(web3.eth.getBalance(accounts[7]).toNumber()))
-
+        console.log("Contract: "+await toEther(web3.eth.getBalance(contract.address).toNumber()))
 
         // .then(function(e, e1){
         //     console.log(e, e1)
@@ -106,15 +105,13 @@ describe('Test', async () => {
             try{
                 await contract.__callback('0x01', {from: contractOwner});
                 console.log('callback success at', i);
+                console.log("Contract: "+await toEther(web3.eth.getBalance(contract.address).toNumber()))
             } catch (e) {
                 // ignore error when callback not reach required blocks
             }
         }
 
 
-        // contract.transferToWinners().then((err, result)=>{
-        //     console.log(err, result);
-        // });
 
     });
   })

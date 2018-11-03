@@ -10,10 +10,11 @@ contract ScheduleContractInterface {
 }
 
 contract EtherLotteryContract is Ownable {
-    uint GAS_LIMIT_DETERMINATION_WINNER = 100000;
-    uint GAS_LIMIT_ROUND_CLOSE = 80000;
-    uint public MAX_TICKET_NUMER = 999999;
+    uint private GAS_LIMIT_DETERMINATION_WINNER = 100000;
+    uint private GAS_LIMIT_ROUND_CLOSE = 80000;
+    uint public MAX_TICKET_NUMER = 99999999;
     address public FOUNDER = 0x81029273484ed1167910dd38f7b73000d342f3cf;
+    uint32[] private DIFFICULTS = [10,100, 1000, 10000, 100000, 1000000, 10000000, 100000000];
 
     using strings for *;
     event NewRoundOpenEvent();
@@ -36,9 +37,9 @@ contract EtherLotteryContract is Ownable {
     uint  public roundDuration = 600; // default 1 day (will change to 8400)
     uint private timeToDeterminingWinner = 60; // (will change to 300)  wait about 300 seconds before determining the winner
     uint public roundOpenDuration = roundDuration - timeToDeterminingWinner;
-    uint256 public ticketPrice = 1000000000000000000; // default 1 ether
+    uint256 public ticketPrice = 200000000000000000; // default 0.1 ether
     uint256 public underLimitPrize = 2 ether; //  the minimum prize to init a round
-    uint256 public totalBalance; // total ether will be paid for the winners, the value will increase when more players buy tickets
+    uint256 public initPrize;
     uint8 public founderEarnPercent = 20; // the percentage the founder earns when finish a round
     uint8 public applicationFeePecent = 2;
     uint32 public lastWinTicketNumber;
@@ -151,8 +152,8 @@ contract EtherLotteryContract is Ownable {
 
     function init() public payable onlyOwner {
         require(_state == State.Initializing || _state == State.Closed);
-        require(msg.value + totalBalance >= underLimitPrize);
-        totalBalance += msg.value;
+        require(msg.value + address(this).balance >= underLimitPrize);
+        initPrize = msg.value;
         startNewRound();
     }
 
@@ -160,7 +161,7 @@ contract EtherLotteryContract is Ownable {
         _state = State.Open;
         generateNextRoundId();
         rounds[_roundId].startTime = uint48(now);
-        rounds[_roundId].winPrize = totalBalance;
+        rounds[_roundId].winPrize = address(this).balance;
         rounds[_roundId].ticketPrice = ticketPrice;
         rounds[_roundId].endTime = uint48(now + roundOpenDuration);
         openBlockNumber = block.number;
@@ -169,10 +170,9 @@ contract EtherLotteryContract is Ownable {
     }
 
     function withdrawFee() public  onlyOwner {
-        require(totalBalance > underLimitPrize);
-        uint256 fee = (totalBalance-underLimitPrize) * founderEarnPercent / 100;
-        require(totalBalance > fee);
-        totalBalance -= fee;
+        require(address(this).balance > underLimitPrize);
+        uint256 fee = (address(this).balance-underLimitPrize) * founderEarnPercent / 100;
+        require(address(this).balance - fee > 0);
         msg.sender.transfer(fee);
     }
 
@@ -267,10 +267,27 @@ contract EtherLotteryContract is Ownable {
 
     }
 
+    function getRoundDifficult() public view returns(uint32) {
+
+        if(initPrize <= 0) {
+            return DIFFICULTS[0];
+        }
+
+        uint diffFactor =  address(this).balance / ticketPrice;
+        uint index = 0;
+        for(;diffFactor / 10 > 0; diffFactor = diffFactor / 10) {
+            index++;
+        }
+        if (index > DIFFICULTS.length - 1) {
+            return DIFFICULTS[DIFFICULTS.length - 1];
+        }
+        return DIFFICULTS[index];
+    }
+
     function finish() private {
 
       //  lastWinTicketNumber = (random() << 2) % 1000000; //  uncomment when goline, ticket number is from 0-999999
-        lastWinTicketNumber = random() % 10;// remove when go line, current ticket number is 0-9
+        lastWinTicketNumber = random() % getRoundDifficult();
 
         rounds[_roundId].winPrize = address(this).balance;
         rounds[_roundId].finishBlock = block.number;
