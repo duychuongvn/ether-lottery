@@ -1,0 +1,55 @@
+<div class="container">
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">Next: Sat 3 Nov 2018 | Draw ID: #120</h5>
+
+  </div>
+  <div class="card-body">
+    <h2 class="card-title">Prize: {{nextPrize}} CLO</h2>
+    <h2 class="card-title">Ticket Price: 10.00  CLO</h2>
+    <h2 class="card-title">Ticket Digits: 02 (should display slide bar)</h2>
+    <a href="buy-ticket" class="btn btn-success">Buy Ticket</a>
+  </div>
+</div>
+
+<br/>
+<div class="card">
+  <div class="card-header">
+    Draw history
+  </div>
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="text-dark">Draw ID</th>
+        <th class="text-dark">Time</th>
+        <th class="text-dark">Winning Number</th>
+        <th class="text-dark">Winners</th>
+      </tr>
+      </thead>
+    <tbody>
+    <tr >
+      <td>1</td>
+      <td>Fri, 02 Nov 2018 10:00</td>
+      <td>1-2-3</td>
+      <th><a href="#">0x00</a></th>
+    </tr>
+    <tr >
+      <td>2</td>
+      <td>Fri, 02 Nov 2018 10:00</td>
+      <td>1-2-3</td>
+      <th><a href="#">0x00</a></th>
+    </tr>
+
+    </tbody>
+    </table>
+  </div>
+</div>
+<div>
+  <button (click)="init()">Init Round</button>
+  <button (click)="buyTicket()">Buy</button>
+  <a href="buy-ticket">Buy Ticket</a>
+</div>
+</div>
+<br/>
+<!-- open a modal window by clicking button-->

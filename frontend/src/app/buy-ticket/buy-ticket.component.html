@@ -1,0 +1,24 @@
+<div class="container content">
+  <div *ngIf="requiredSignMetamask" class="card">
+    <div class="card card-header">Require login to metamask</div>
+  </div>
+  <div *ngIf="!requiredSignMetamask" class="card">
+    <div class="card-body">
+      <button class="btn btn-primary" (click)="addTicket()">Add More Ticket</button>
+
+    <ul>
+      <li *ngFor="let ticket of tickets" class="list-inline">
+      <span>
+    <input [(ngModel)]="ticket.ticketNumber" placeholder="00000000">
+      <a class="btn btn-link" (click)="removeTicket(ticket)">Remove</a>
+      </span>
+
+      </li>
+    </ul>
+
+      <button class="btn btn-success">Buy</button>
+    </div>
+
+  </div>
+
+</div>

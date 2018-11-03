@@ -1,0 +1,33 @@
+<!-- Modal section -->
+<div class="backdrop" [ngStyle]="{'display':modal.display}"></div>
+
+<div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':modal.display}">
+
+  <div class="modal-dialog" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h6 class="modal-title">Metamask Sigin Required</h6>
+        <button type="button" class="close" aria-label="Close" (click)="onCloseHandled()"><span aria-hidden="true">&times;</span></button>
+
+      </div>
+
+      <div class="modal-body">
+        <img src="../../assets/images/metamask-logo.png" alt="avatar" width="20%">
+        <p class="mb-0 subheading">This action require mainnet</p>
+        <p class="mb-0 subheading">Please login to metamask and configure network. Follow <a href="">here</a> for more detail</p>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-default" (click)="onCloseHandled()" >Close</button>
+
+      </div>
+
+    </div><!-- /.modal-content -->
+
+  </div><!-- /.modal-dialog -->
+
+</div><!-- /.modal !-->
