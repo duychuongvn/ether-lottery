@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Ticket} from "../../model/ticket";
+import {ContractService} from "../../services/contract.service";
 
 @Component({
   selector: 'app-buy-ticket',
@@ -9,7 +10,7 @@ import {Ticket} from "../../model/ticket";
 export class BuyTicketComponent implements OnInit {
 
   requiredSignMetamask: boolean;
-  constructor() { }
+  constructor(private contractService: ContractService) { }
 
   tickets : Ticket[]
   ngOnInit() {
@@ -26,4 +27,17 @@ export class BuyTicketComponent implements OnInit {
     if(index>0)
     this.tickets.splice(index, 1)
   }
+
+   buyTicket() : void {
+
+      let ticketNumers = [] as number[];
+      this.tickets.forEach((item)=>{
+        if(item.ticketNumber) {
+          ticketNumers.push(+item.ticketNumber)
+        }
+      })
+     this.contractService.buyTickets(ticketNumers).subscribe((res)=>{
+       console.log(res)
+     });
+   }
 }

@@ -1,17 +1,16 @@
 <div class="container">
 <div class="card">
   <div class="card-header">
-    <h5 class="card-title">Next: Sat 3 Nov 2018 | Draw ID: #120</h5>
+    <h5 class="card-title">{{nextRound.closeTimeDisplay}}| Draw ID: #{{nextRound.id}}</h5>
 
   </div>
   <div class="card-body">
-    <h2 class="card-title">Prize: {{nextPrize}} CLO</h2>
-    <h2 class="card-title">Ticket Price: 10.00  CLO</h2>
-    <h2 class="card-title">Ticket Digits: 02 (should display slide bar)</h2>
+    <h2 class="card-title">Current Prize: {{nextRound.prizeFormated}} CLO</h2>
+    <h2 class="card-title">Ticket Price: {{nextRound.ticketPrice}}  CLO</h2>
+    <h2 class="card-title">Estimated Difficult:  {{nextRound.estimateDifficult}} Digits (should display slide bar)</h2>
     <a href="buy-ticket" class="btn btn-success">Buy Ticket</a>
   </div>
 </div>
-
 <br/>
 <div class="card">
   <div class="card-header">
@@ -23,24 +22,19 @@
       <tr>
         <th class="text-dark">Draw ID</th>
         <th class="text-dark">Time</th>
+        <th class="text-dark">Prize</th>
         <th class="text-dark">Winning Number</th>
         <th class="text-dark">Winners</th>
       </tr>
       </thead>
     <tbody>
-    <tr >
-      <td>1</td>
-      <td>Fri, 02 Nov 2018 10:00</td>
-      <td>1-2-3</td>
+    <tr *ngFor="let round of rounds">
+      <td>{{round.id}}</td>
+      <td>{{round.closeTimeDisplay}}</td>
+      <td>{{round.prizeFormated}} CLO</td>
+      <td>{{round.winningNumberFormated}}</td>
       <th><a href="#">0x00</a></th>
     </tr>
-    <tr >
-      <td>2</td>
-      <td>Fri, 02 Nov 2018 10:00</td>
-      <td>1-2-3</td>
-      <th><a href="#">0x00</a></th>
-    </tr>
-
     </tbody>
     </table>
   </div>

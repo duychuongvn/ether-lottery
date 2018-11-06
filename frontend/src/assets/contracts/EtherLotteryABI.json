@@ -146,7 +146,7 @@
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "uint48"
       }
     ],
     "payable": false,
@@ -174,7 +174,7 @@
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "uint48"
       }
     ],
     "payable": false,
@@ -352,28 +352,47 @@
     "name": "getCurrentRoundInfo",
     "outputs": [
       {
-        "name": "roundId",
-        "type": "uint256"
+        "name": "roundTime",
+        "type": "uint48[2]"
       },
       {
-        "name": "ticketPrice",
-        "type": "uint256"
+        "name": "pricePrize",
+        "type": "uint256[2]"
       },
       {
-        "name": "startTime",
-        "type": "uint256"
+        "name": "winCountNumber",
+        "type": "uint32[2]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "offset",
+        "type": "uint48"
       },
       {
-        "name": "endTime",
-        "type": "uint256"
+        "name": "limit",
+        "type": "uint48"
+      }
+    ],
+    "name": "getRounds",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint48[2][]"
       },
       {
-        "name": "state",
-        "type": "uint8"
+        "name": "",
+        "type": "uint256[2][]"
       },
       {
-        "name": "currentPrize",
-        "type": "uint256"
+        "name": "",
+        "type": "uint32[2][]"
       }
     ],
     "payable": false,
@@ -385,38 +404,22 @@
     "inputs": [
       {
         "name": "_id",
-        "type": "uint256"
+        "type": "uint48"
       }
     ],
     "name": "getRoundInfo",
     "outputs": [
       {
-        "name": "roundId",
-        "type": "uint256"
+        "name": "roundTime",
+        "type": "uint48[2]"
       },
       {
-        "name": "ticketPrice",
-        "type": "uint256"
+        "name": "pricePrize",
+        "type": "uint256[2]"
       },
       {
-        "name": "startTime",
-        "type": "uint256"
-      },
-      {
-        "name": "endTime",
-        "type": "uint256"
-      },
-      {
-        "name": "state",
-        "type": "uint8"
-      },
-      {
-        "name": "winPrize",
-        "type": "uint256"
-      },
-      {
-        "name": "ticketNumber",
-        "type": "uint32"
+        "name": "winCountNumber",
+        "type": "uint32[2]"
       }
     ],
     "payable": false,

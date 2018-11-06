@@ -9,14 +9,14 @@
     <ul>
       <li *ngFor="let ticket of tickets" class="list-inline">
       <span>
-    <input [(ngModel)]="ticket.ticketNumber" placeholder="00000000">
+    <input [(ngModel)]="ticket.ticketNumber" [required]="true" placeholder="00000000">
       <a class="btn btn-link" (click)="removeTicket(ticket)">Remove</a>
       </span>
 
       </li>
     </ul>
 
-      <button class="btn btn-success">Buy</button>
+      <button class="btn btn-success" (click)="buyTicket()"> Buy</button>
     </div>
 
   </div>

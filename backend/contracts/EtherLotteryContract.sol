@@ -34,9 +34,9 @@ contract EtherLotteryContract is Ownable {
 
     mapping(uint32=> address[]) private buyerTicketNumbers;
     bytes32 private _lastBuyBlockHash;  // the last block hash user buys the ticket before closing a round
-    uint  public roundDuration = 600; // default 1 day (will change to 8400)
-    uint private timeToDeterminingWinner = 60; // (will change to 300)  wait about 300 seconds before determining the winner
-    uint public roundOpenDuration = roundDuration - timeToDeterminingWinner;
+    uint48  public roundDuration = 600; // default 1 day (will change to 8400)
+    uint48 private timeToDeterminingWinner = 60; // (will change to 300)  wait about 300 seconds before determining the winner
+    uint48 public roundOpenDuration = roundDuration - timeToDeterminingWinner;
     uint256 public ticketPrice = 200000000000000000; // default 0.1 ether
     uint256 public underLimitPrize = 2 ether; //  the minimum prize to init a round
     uint256 public initPrize;
@@ -84,34 +84,24 @@ contract EtherLotteryContract is Ownable {
         return (winnerAddresses, winnerAmounts);
     }
 
-    function getCurrentRoundInfo() public view returns(uint roundId,
-                                                uint256 ticketPrice,
-                                                uint256 startTime,
-                                                uint256 endTime,
-                                                State state,
-                                                uint256 currentPrize) {
-        roundId = _roundId;
-        uint32 ticketNumber;
-        (roundId, ticketPrice, startTime, endTime, state, currentPrize, ticketNumber) =  getRoundInfo(roundId);
-    }
-
-    function getRoundInfo(uint _id) public view returns(uint roundId,
+    function getRoundInfo(uint48 _id) public view returns(uint roundId,
         uint256 ticketPrice,
         uint256 startTime,
         uint256 endTime,
-        State state,
-        uint256 winPrize,
-        uint32 ticketNumber) {
+        uint48 numberOfWinners,
+        uint256 prize,
+        uint32 winningNumber) {
         roundId = _id;
         ticketPrice = rounds[_id].ticketPrice;
         startTime = uint256(rounds[_id].startTime);
         endTime = uint256(rounds[_id].startTime + roundDuration);
-        state = _state;
+
         if (_id == _roundId && _state != State.WaitingForPayment ) {
             winPrize = address(this).balance;
         } else {
             winPrize = rounds[_id].winPrize;
-            ticketNumber = rounds[_id].winNumber;
+            winningNumber = rounds[_id].winNumber;
+            numberOfWinners = rounds[_id].buyerTicketNumbers[winningNumber].length;
         }
     }
 
