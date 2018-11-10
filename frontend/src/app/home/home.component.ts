@@ -1,4 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {MatSliderModule} from '@angular/material/slider';
+
 import {ContractService} from "../../services/contract.service";
 import {Round} from "../../model/round";
 import {Web3ProviderService} from "../../services/web3-provider.service";

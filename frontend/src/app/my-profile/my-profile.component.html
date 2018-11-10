@@ -8,12 +8,14 @@
         </div>
         <div class="card-body">
 
-          <table class="table-borderless">
+          <table class="table table-bordered">
             <thead>
-            <th>Ticket Number</th>
+            <td class="text-dark">No</td>
+            <th class="text-dark">Ticket Number</th>
             </thead>
             <tbody>
-            <tr *ngFor="let ticket of history.ticketNumbers; index as i" >
+            <tr *ngFor="let ticket of history.ticketNumbers; index as i">
+              <td>{{i+1}}</td>
               <td>
                 <span *ngFor="let number of ticket.ticketIterators" class="dot">{{number}}</span>
               </td>

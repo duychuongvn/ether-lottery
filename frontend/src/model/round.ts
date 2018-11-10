@@ -37,4 +37,7 @@ export class Round {
   get winningChance():number {
     return 1/this.currentRoundDigit * 100;
   }
+  get ticketPriceDisplay():string {
+    return NumberUtil.currencyFormat(this.ticketPrice);
+  }
 }

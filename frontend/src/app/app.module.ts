@@ -11,12 +11,14 @@ import { BuyTicketComponent } from './buy-ticket/buy-ticket.component';
 import { CountdownComponent } from './countdown/countdown.component';
 import { ModalNetworkComponent } from './modal-network/modal-network.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { RoundHistoryComponent } from './round-history/round-history.component';
 
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'buy-ticket', component: BuyTicketComponent },
   { path: 'my-profile', component: MyProfileComponent },
+  { path: 'round/:id', component: RoundHistoryComponent },
   { path: '',
     redirectTo: '/home',
     pathMatch: 'full'
@@ -33,7 +35,8 @@ const appRoutes: Routes = [
     BuyTicketComponent,
     CountdownComponent,
     ModalNetworkComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    RoundHistoryComponent
   ],
   imports: [
     BrowserModule,

@@ -82,24 +82,29 @@ export class ContractService {
     //getRoundDifficult
     return Observable.create((observe: any) => {
       this.contract._roundId.call((err:any, roundId:any)=>{
-        this.contract.getRoundInfo.call(roundId,(err:any, result:any)=>{
-          let round = this.extractedRounInfo(result);
-          this.contract.getRoundDifficult((err:any, result:any)=>{
-            let length = 0;
-            let diff = parseInt(result.toNumber()) as number;
-            round.currentRoundDigit = result.toNumber();
-
-
-            observe.next(round);
-            observe.complete();
-          })
-
-        })
+       this.getRoundInfo(roundId).subscribe(round=>{
+         observe.next(round);
+         observe.complete();
+       })
       })
-
     });
   }
 
+  getRoundInfo(roundId:number):Observable<Round> {
+    return Observable.create((observe:any)=>{
+      this.contract.getRoundInfo.call(roundId,(err:any, result:any)=>{
+        let round = this.extractedRounInfo(result);
+        this.contract.getRoundDifficult((err:any, result:any)=>{
+          let length = 0;
+          let diff = parseInt(result.toNumber()) as number;
+          round.currentRoundDigit = result.toNumber();
+          observe.next(round);
+          observe.complete();
+        })
+
+      })
+    })
+  }
   private extractedRounInfo(result: any) {
     let round = new Round();
     round.id = result[0].toNumber();
@@ -151,13 +156,13 @@ export class ContractService {
       this.contract.getUserRounds(address,(err:any, result:any)=>{
          let totalRecords = result.length;
         let obsers = [] as Observable<UserHistory>[];
-         for(let i = pageRequest.getOffset(); i < pageRequest.getLimit(totalRecords);i++) {
+         for(let i = pageRequest.getLimit(totalRecords) -1;  i >=pageRequest.getOffset();i--) {
            obsers.push(Observable.create((observe:any)=>{
              this.contract.getUserHistories.call(address, result[i],(err:any, hisotry:any)=>{
                let userHistory = new UserHistory();
                userHistory.roundId = hisotry[0].toNumber();
                userHistory.paidAmount = NumberUtil.toEther(hisotry[2].toNumber());
-               userHistory.roundTime = NumberUtil.toEther(hisotry[3].toNumber());
+               userHistory.roundTime = hisotry[3].toNumber();
                for(let i = 0;i<hisotry[1].length;i++) {
                  userHistory.ticketNumbers.push(new Ticket(hisotry[1][i].toNumber()+""));
                }

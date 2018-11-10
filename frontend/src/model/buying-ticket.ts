@@ -1,4 +1,5 @@
 import {Ticket} from "./ticket";
+import {NumberUtil} from "../util/number-util";
 
 export class BuyingTicket {
 
@@ -20,8 +21,8 @@ export class BuyingTicket {
   }
 
 
-  get totalPaid(): number {
-    return this.tickets.length * this.tickPrice;
+  get totalPaid(): number|string {
+    return NumberUtil.currencyFormat(this.tickets.length * this.tickPrice);
   }
 
 
@@ -29,6 +30,9 @@ export class BuyingTicket {
     return this._tickPrice;
   }
 
+  get ticketPriceDisplay():string {
+    return NumberUtil.currencyFormat(this.tickPrice);
+  }
 
   get tickets(): Ticket[] {
     return this._tickets;

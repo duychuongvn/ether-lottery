@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="card" *ngIf="round != null">
+    <div class="card-header">
+      <h5 class="card-title">{{round.closeTimeDisplay}}| Draw ID: #{{round.id}}</h5>
+
+    </div>
+    <div class="card-body">
+      <h2 class="card-title">Prize: {{round.prizeFormated}} CLO</h2>
+      <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  CLO</h2>
+      <div class="row">
+        <h2 class="card-title">Winning Number: </h2>
+        <span class="dot" *ngFor="let number of round.winningNumber.ticketIterators">{{number}}</span>
+      </div>
+      <div class="row">
+        <h2 class="card-title">Number Of Winners: {{round.totalWinners}}</h2>
+      </div>
+    </div>
+</div>
+  <br/>
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Winner Information</h2>
+    </div>
+    <div class="card-body">
+      ssss
+    </div>
+  </div>
+</div>

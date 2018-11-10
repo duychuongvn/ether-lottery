@@ -6,8 +6,14 @@
   </div>
   <div class="card-body">
     <h2 class="card-title">Current Prize: {{nextRound.prizeFormated}} CLO</h2>
-    <h2 class="card-title">Ticket Price: {{nextRound.ticketPrice}}  CLO</h2>
-    <h2 class="card-title">Estimated Difficult:  {{nextRound.estimateDifficult}} Digits (should display slide bar)</h2>
+    <h2 class="card-title">Ticket Price: {{nextRound.ticketPriceDisplay}}  CLO</h2>
+    <h2 class="card-title">Estimated Difficult:
+      <div class="slidecontainer">
+        <span class="text-center">1</span>
+        <input disabled type="range" id="range" min="1" max="8" value="{{nextRound.estimateDifficult}}" class="slider" >
+        <label for="range">8 Digits</label>
+      </div>
+    </h2>
     <h2 class="card-title">Winning chance: {{(1/ nextRound.currentRoundDigit) * 100}}%</h2>
     <a href="buy-ticket" class="btn btn-success">Buy Ticket</a>
   </div>
