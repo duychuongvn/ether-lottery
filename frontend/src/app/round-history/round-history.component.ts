@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import { ActivatedRoute } from '@angular/router';
 import {Round} from "../../model/round";
 import {ContractService} from "../../services/contract.service";
+import {environment} from "../../environments/environment";
+import {AppInfo} from "../../model/app-info";
 
 @Component({
   selector: 'app-round-history',
@@ -13,6 +15,7 @@ export class RoundHistoryComponent implements OnInit {
 
   roundId:number;
   round: Round;
+  appInfo=new  AppInfo();
   constructor(private route: ActivatedRoute,
               private contractService: ContractService,
               private cdr: ChangeDetectorRef) { }
@@ -25,6 +28,7 @@ export class RoundHistoryComponent implements OnInit {
         this.round = round;
         this.cdr.detectChanges();
       })
+
     });
   }
 

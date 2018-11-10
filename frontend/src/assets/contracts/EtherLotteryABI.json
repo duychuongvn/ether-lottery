@@ -373,16 +373,20 @@
         "type": "uint256"
       },
       {
-        "name": "numberOfWinners",
-        "type": "uint48"
+        "name": "winningNumber",
+        "type": "uint32"
       },
       {
         "name": "winPrize",
         "type": "uint256"
       },
       {
-        "name": "winningNumber",
-        "type": "uint32"
+        "name": "totalPaid",
+        "type": "uint256"
+      },
+      {
+        "name": "winners",
+        "type": "address[]"
       }
     ],
     "payable": false,

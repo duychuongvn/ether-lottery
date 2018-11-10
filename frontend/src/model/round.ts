@@ -3,22 +3,20 @@ import {NumberUtil} from "../util/number-util";
 import {Ticket} from "./ticket";
 
 export class Round {
-  id: number
-  openTime: number
-  openTimeDisplay: string
-  closeTime: number
-  closeTimeDisplay: string
-  winningNumber:Ticket
-  winningNumberPairs: string []
-  ticketPrice:number
-  prize:number
-  totalWinners:number
-  status: number
-  statusDisplay:string
-  private _prize:number
-  winners: Winner[]
+  id: number;
+  openTime: number;
+  openTimeDisplay: string;
+  closeTime: number;
+  closeTimeDisplay: string;
+  winningNumber:Ticket;
+  ticketPrice:number;
+  prize:number;
+  status: number;
+  statusDisplay:string;
+  private _prize:number;
+  winners = [] as  Winner[];
   currentRoundDigit:number;
-
+  totalPaid:number;
 
   get prizeFormated(): string {
     return NumberUtil.currencyFormat(this.prize);
@@ -39,5 +37,9 @@ export class Round {
   }
   get ticketPriceDisplay():string {
     return NumberUtil.currencyFormat(this.ticketPrice);
+  }
+
+  get totalWinners():number {
+    return this.winners.length;
   }
 }

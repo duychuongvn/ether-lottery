@@ -4,6 +4,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import {ContractService} from "../../services/contract.service";
 import {Round} from "../../model/round";
 import {Web3ProviderService} from "../../services/web3-provider.service";
+import {AppInfo} from "../../model/app-info";
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
   nextRound: Round;
   rounds: Round[];
   address: any;
+  appInfo = new AppInfo();
   constructor(private contractService: ContractService,
               private web3Service: Web3ProviderService,
               private cdr: ChangeDetectorRef) {

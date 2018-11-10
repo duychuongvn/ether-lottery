@@ -5,6 +5,7 @@ import {Web3ProviderService} from "../../services/web3-provider.service";
 import {Round} from "../../model/round";
 import {BuyingTicket} from "../../model/buying-ticket";
 import {Modal} from "../../model/modal";
+import {AppInfo} from "../../model/app-info";
 
 @Component({
   selector: 'app-buy-ticket',
@@ -24,7 +25,8 @@ export class BuyTicketComponent implements OnInit {
   round: Round;
   address:any;
   modal:Modal;
-  buyingTicket: BuyingTicket
+  buyingTicket: BuyingTicket;
+  appInfo = new AppInfo();
 
   ngOnInit() {
     this.requiredSignMetamask = false;

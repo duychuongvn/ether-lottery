@@ -5,8 +5,8 @@
 
   </div>
   <div class="card-body">
-    <h2 class="card-title">Current Prize: {{nextRound.prizeFormated}} CLO</h2>
-    <h2 class="card-title">Ticket Price: {{nextRound.ticketPriceDisplay}}  CLO</h2>
+    <h2 class="card-title">Current Prize: {{nextRound.prizeFormated}} {{appInfo.symbol}}</h2>
+    <h2 class="card-title">Ticket Price: {{nextRound.ticketPriceDisplay}}  {{appInfo.symbol}}</h2>
     <h2 class="card-title">Estimated Difficult:
       <div class="slidecontainer">
         <span class="text-center">1</span>
@@ -38,11 +38,11 @@
     <tr *ngFor="let round of rounds">
       <td><a href="round/{{round.id}}">{{round.id}}</a></td>
       <td>{{round.closeTimeDisplay}}</td>
-      <td>{{round.prizeFormated}} CLO</td>
+      <td>{{round.prizeFormated}} {{appInfo.symbol}}</td>
       <td><span class="dot-25" *ngFor="let number of round.winningNumber.ticketIterators">{{number}}</span></td>
       <th>
         <span *ngIf="round.totalWinners ==0">No winner found</span>
-        <span *ngIf="round.totalWinners >0"><a href="#">0x00</a></span>
+        <span *ngIf="round.totalWinners >0"><a href="round/{{round.id}}">Details</a></span>
         </th>
     </tr>
     </tbody>

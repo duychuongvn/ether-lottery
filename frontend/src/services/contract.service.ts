@@ -11,6 +11,7 @@ import {Web3ProviderService} from "./web3-provider.service";
 import {Page} from "../model/page";
 import {PageRequest} from "../model/page-request";
 import {Ticket} from "../model/ticket";
+import {Winner} from "../model/winner";
 declare const require: any;
 const contractABI = require('../assets/contracts/EtherLotteryABI.json');
 
@@ -112,9 +113,17 @@ export class ContractService {
 
     round.closeTime = result[3].toNumber()
     round.closeTimeDisplay = DateTime.fromMillis(round.closeTime * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
-    round.totalWinners = result[4].toNumber()
-    round.prize = NumberUtil.toEther((result[5].toNumber()))
-    round.winningNumber = new Ticket(result[6].toNumber()+"")
+    round.winningNumber = new Ticket(result[4].toNumber()+"")
+    round.prize = NumberUtil.toEther((result[5].toNumber()));
+    round.totalPaid = result[6].toNumber();
+    for(let i=0;i<result[7].length;i++) {
+      let winner = new Winner();
+      winner.address = result[7][i];
+      winner.prize = round.prize;
+      winner.received = round.totalPaid/result[7].length;
+      winner.roundId = round.id;
+      round.winners.push(winner);
+    }
     return round;
   }
 

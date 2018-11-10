@@ -88,9 +88,10 @@ contract EtherLotteryContract is Ownable {
         uint256 ticketPrice,
         uint256 startTime,
         uint256 endTime,
-        uint48 numberOfWinners,
+        uint32 winningNumber,
         uint256 winPrize,
-        uint32 winningNumber) {
+        uint256 totalPaid,
+        address[] winners) {
         roundId = _id;
         ticketPrice = rounds[_id].ticketPrice;
         startTime = uint256(rounds[_id].startTime);
@@ -101,7 +102,8 @@ contract EtherLotteryContract is Ownable {
         } else {
             winPrize = rounds[_id].winPrize;
             winningNumber = rounds[_id].winNumber;
-            numberOfWinners = uint32(rounds[_id].buyerTicketNumbers[winningNumber].length);
+            totalPaid = rounds[_id].totalPaid;
+            winners = rounds[_id].buyerTicketNumbers[winningNumber];
         }
     }
 

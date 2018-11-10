@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  contactAddress: '0x13274fe19c0178208bcbee397af8167a7be27f6f'
+  contactAddress: '0xf25186b5081ff5ce73482ad761db0eb0d25abfbf',
+  explorer: 'http://explorer2.callisto.network',
+  symbol: 'CLO'
 };

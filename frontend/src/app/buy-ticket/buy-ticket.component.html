@@ -11,9 +11,9 @@
       </div>
       <div class="card-body">
         <div class="row">
-        <h2 class="card-title">Current Prize: {{round.prizeFormated}} CLO</h2>
+        <h2 class="card-title">Current Prize: {{round.prizeFormated}} {{appInfo.symbol}}</h2>
         </div>
-        <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  CLO</h2>
+        <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  {{appInfo.symbol}}</h2>
         <div class="row">
           <label class="col-sm-2">Estimated Difficult: </label>
           <div class="col-sm-10">
@@ -73,9 +73,9 @@
 
         <div class="modal-body">
           <p class="mb-0 subheading">Current Round: {{round.id}}</p>
-          <p class="mb-0 subheading">Ticket Price: {{round.ticketPriceDisplay}}</p>
+          <p class="mb-0 subheading">Ticket Price: {{round.ticketPriceDisplay}} {{appInfo.symbol}}</p>
           <p class="mb-0 subheading">Number Of Tickets: {{buyingTicket.totalTicket}}</p>
-          <p class="mb-0 subheading">Total Pay: {{buyingTicket.totalPaid}}</p>
+          <p class="mb-0 subheading">Total Pay: {{buyingTicket.totalPaid}} {{appInfo.symbol}}</p>
           <div class="card-body">
               <table class="table table-bordered">
                 <thead class="thead-dark">

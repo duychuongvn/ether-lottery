@@ -5,14 +5,11 @@
 
     </div>
     <div class="card-body">
-      <h2 class="card-title">Prize: {{round.prizeFormated}} CLO</h2>
-      <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  CLO</h2>
+      <h2 class="card-title">Prize: {{round.prizeFormated}} {{appInfo.symbol}}</h2>
+      <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  {{appInfo.symbol}}</h2>
       <div class="row">
         <h2 class="card-title">Winning Number: </h2>
         <span class="dot" *ngFor="let number of round.winningNumber.ticketIterators">{{number}}</span>
-      </div>
-      <div class="row">
-        <h2 class="card-title">Number Of Winners: {{round.totalWinners}}</h2>
       </div>
     </div>
 </div>
@@ -22,7 +19,30 @@
       <h2 class="card-title">Winner Information</h2>
     </div>
     <div class="card-body">
-      ssss
+       <div *ngIf="round.totalWinners == 0">No Winner Found</div>
+      <div *ngIf="round.totalWinners > 0">
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Address</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let winner of round.winners; index as i">
+            <td>
+               {{i+1}}
+            </td>
+            <td>
+              <a href="{{appInfo.explorer}}/addr/{{winner.address}}">{{winner.address}}</a>
+            </td>
+            <td><span>{{winner.received}} {{appInfo.symbol}}</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
