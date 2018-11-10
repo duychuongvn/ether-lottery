@@ -1,5 +1,6 @@
 import {Winner} from "./winner";
 import {NumberUtil} from "../util/number-util";
+import {Ticket} from "./ticket";
 
 export class Round {
   id: number
@@ -7,9 +8,8 @@ export class Round {
   openTimeDisplay: string
   closeTime: number
   closeTimeDisplay: string
-  winningNumber:number
+  winningNumber:Ticket
   winningNumberPairs: string []
-  estimateDifficult: number
   ticketPrice:number
   prize:number
   totalWinners:number
@@ -17,14 +17,24 @@ export class Round {
   statusDisplay:string
   private _prize:number
   winners: Winner[]
+  currentRoundDigit:number;
+
 
   get prizeFormated(): string {
     return NumberUtil.currencyFormat(this.prize);
   }
-  get winningNumberFormated (): string {
-    if(this.winningNumber) {
-      return this.winningNumber + "";// TODO will do later
+
+  get estimateDifficult():number {
+    let diff = this.currentRoundDigit;
+    let length = 0;
+    while (Math.trunc(diff / 10) > 0) {
+      diff = Math.trunc(diff / 10);
+      length++;
     }
-    return "N/A";
+    return length;
+  }
+
+  get winningChance():number {
+    return 1/this.currentRoundDigit * 100;
   }
 }

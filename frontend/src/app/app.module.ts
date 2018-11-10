@@ -10,11 +10,13 @@ import { FormsModule } from '@angular/forms';
 import { BuyTicketComponent } from './buy-ticket/buy-ticket.component';
 import { CountdownComponent } from './countdown/countdown.component';
 import { ModalNetworkComponent } from './modal-network/modal-network.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'buy-ticket', component: BuyTicketComponent },
+  { path: 'my-profile', component: MyProfileComponent },
   { path: '',
     redirectTo: '/home',
     pathMatch: 'full'
@@ -30,7 +32,8 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     BuyTicketComponent,
     CountdownComponent,
-    ModalNetworkComponent
+    ModalNetworkComponent,
+    MyProfileComponent
   ],
   imports: [
     BrowserModule,

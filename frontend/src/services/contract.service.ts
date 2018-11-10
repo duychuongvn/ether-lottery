@@ -6,6 +6,11 @@ import { DateTime } from 'luxon';
 import {NumberUtil} from "../util/number-util";
 import {observeOn} from "rxjs/internal/operators";
 import {forkJoin} from 'rxjs';
+import {UserHistory} from "../model/user-history";
+import {Web3ProviderService} from "./web3-provider.service";
+import {Page} from "../model/page";
+import {PageRequest} from "../model/page-request";
+import {Ticket} from "../model/ticket";
 declare const require: any;
 const contractABI = require('../assets/contracts/EtherLotteryABI.json');
 
@@ -22,7 +27,7 @@ export class ContractService {
   pageSize = 10 as number;
   address: any;
   contract: any;
-  constructor() {
+  constructor(private web3ProviderService: Web3ProviderService) {
 
     this.init();
   }
@@ -38,19 +43,19 @@ export class ContractService {
     }
   }
 
-  initRound(amount: number):void{
-     this.contract.init({from: this.address, value: window.web3.toWei(amount)}, (err:any,success:any) =>{
+  initRound(owner:any,amount: number):void{
+     this.contract.init({from: owner, value: window.web3.toWei(amount)}, (err:any,success:any) =>{
 
        console.log("error: ", err)
        console.log("success: ", success)
     });
   }
 
-  buyTickets(tickets: any []): Observable<any> {
+  buyTickets(buyer:any,tickets: Ticket []): Observable<any> {
     return Observable.create((observable: any) =>{
       this.getCurrentRound().subscribe((round)=>{
         let amount= tickets.length* round.ticketPrice;
-        this.contract.buyTickets(tickets,{from: this.address, value: window.web3.toWei(amount)}, (err:any,success:any) =>{
+        this.contract.buyTickets(tickets.map(x=>x.ticketNumber),{from: buyer, value: window.web3.toWei(amount)}, (err:any,success:any) =>{
 
           observable.next(success);
           observable.complete();
@@ -77,16 +82,14 @@ export class ContractService {
     //getRoundDifficult
     return Observable.create((observe: any) => {
       this.contract._roundId.call((err:any, roundId:any)=>{
-        this.contract.getRoundInfo(roundId,(err:any, result:any)=>{
+        this.contract.getRoundInfo.call(roundId,(err:any, result:any)=>{
           let round = this.extractedRounInfo(result);
           this.contract.getRoundDifficult((err:any, result:any)=>{
             let length = 0;
             let diff = parseInt(result.toNumber()) as number;
-            while (Math.trunc(diff / 10) > 0) {
-              diff = Math.trunc(diff / 10);
-              length++;
-            }
-            round.estimateDifficult = length;
+            round.currentRoundDigit = result.toNumber();
+
+
             observe.next(round);
             observe.complete();
           })
@@ -99,15 +102,14 @@ export class ContractService {
 
   private extractedRounInfo(result: any) {
     let round = new Round();
-    round.id = result[0][0].toNumber();
-    round.closeTime = result[0][1].toNumber()
-    round.closeTimeDisplay = DateTime.fromMillis(round.closeTime * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+    round.id = result[0].toNumber();
+    round.ticketPrice = NumberUtil.toEther((result[1].toNumber()))
 
-    round.ticketPrice = NumberUtil.toEther((result[1][0].toNumber()))
-    round.prize = NumberUtil.toEther((result[1][1].toNumber()))
-    round.winningNumber = result[2][0].toNumber()
-    round.totalWinners = result[2][1].toNumber()
-    console.log('r',round)
+    round.closeTime = result[3].toNumber()
+    round.closeTimeDisplay = DateTime.fromMillis(round.closeTime * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+    round.totalWinners = result[4].toNumber()
+    round.prize = NumberUtil.toEther((result[5].toNumber()))
+    round.winningNumber = new Ticket(result[6].toNumber()+"")
     return round;
   }
 
@@ -123,12 +125,11 @@ export class ContractService {
           if(limit > _roundId) {
             limit = _roundId;
           }
-        console.log(limit)
 
          let obsers = [] as Observable<Round>[];
-          for(let _i = _roundId - offset; _i > 0 && count <limit;_i--) {
+          for(let _i = _roundId - offset - 1; _i > 0 && count <limit;_i--) {
           obsers.push(Observable.create((ob)=>{
-            this.contract.getRoundInfo(_i,(err:any, result:any)=> {
+            this.contract.getRoundInfo.call(_i,(err:any, result:any)=> {
               let round = this.extractedRounInfo(result);
               ob.next(round)
               ob.complete();
@@ -145,4 +146,31 @@ export class ContractService {
     })
   }
 
+  getUserHistories(address:string, pageRequest:PageRequest): Observable<Page<UserHistory>> {
+    return Observable.create((obser:any)=>{
+      this.contract.getUserRounds(address,(err:any, result:any)=>{
+         let totalRecords = result.length;
+        let obsers = [] as Observable<UserHistory>[];
+         for(let i = pageRequest.getOffset(); i < pageRequest.getLimit(totalRecords);i++) {
+           obsers.push(Observable.create((observe:any)=>{
+             this.contract.getUserHistories.call(address, result[i],(err:any, hisotry:any)=>{
+               let userHistory = new UserHistory();
+               userHistory.roundId = hisotry[0].toNumber();
+               userHistory.paidAmount = NumberUtil.toEther(hisotry[2].toNumber());
+               userHistory.roundTime = NumberUtil.toEther(hisotry[3].toNumber());
+               for(let i = 0;i<hisotry[1].length;i++) {
+                 userHistory.ticketNumbers.push(new Ticket(hisotry[1][i].toNumber()+""));
+               }
+               observe.next(userHistory);
+               observe.complete();
+             });
+           }));
+         }
+        forkJoin(obsers).subscribe((userHistories: UserHistory[])=>{
+          obser.next(new Page<UserHistory>(totalRecords, pageRequest, userHistories))
+          obser.complete();
+        })
+      })
+    });
+  }
 }

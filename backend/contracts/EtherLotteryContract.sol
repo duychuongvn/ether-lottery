@@ -89,7 +89,7 @@ contract EtherLotteryContract is Ownable {
         uint256 startTime,
         uint256 endTime,
         uint48 numberOfWinners,
-        uint256 prize,
+        uint256 winPrize,
         uint32 winningNumber) {
         roundId = _id;
         ticketPrice = rounds[_id].ticketPrice;
@@ -101,34 +101,28 @@ contract EtherLotteryContract is Ownable {
         } else {
             winPrize = rounds[_id].winPrize;
             winningNumber = rounds[_id].winNumber;
-            numberOfWinners = rounds[_id].buyerTicketNumbers[winningNumber].length;
+            numberOfWinners = uint32(rounds[_id].buyerTicketNumbers[winningNumber].length);
         }
     }
 
-    function getUserRecords(address user) public view returns(uint32[] roundIds, string tickets, uint256[] amounts) {
-        uint32[] memory _roundIds = new uint32[](_roundId);
-        uint256[] memory _amounts = new uint256[](_roundId);
+    function getUserRounds(address user) public view returns (uint32[] roundIds) {
         uint32 myroundId=0;
+        uint32[] memory _roundIds = new uint32[](_roundId);
         for(uint32 i = 0; i <= _roundId;i++ ) {
             if(rounds[i].userTickets[user].length > 0) {
                 _roundIds[myroundId] = i;
-                _amounts[myroundId] = SafeMath.safeMul(rounds[i].ticketPrice, rounds[i].userTickets[user].length);
-                tickets = tickets.toSlice().concat("-R-".toSlice()).toSlice().concat(concatTickets(rounds[i].userTickets[user]).toSlice());
                 myroundId++;
             }
         }
 
-        if(myroundId == 0) {
-            return (new uint32[](0), "", new uint256[](0));
-        }
         roundIds = take(myroundId, _roundIds);
-        amounts = take(myroundId, _amounts);
+
     }
 
-    function concatTickets(uint32[] ticketNumbers) private view returns(string  tickets) {
-        for(uint32 i=0; i < ticketNumbers.length; i++) {
-            tickets = tickets.toSlice().concat(uint2str(ticketNumbers[i]).toSlice()).toSlice().concat("-T-".toSlice());
-        }
+    function getUserHistories(address user, uint32 roundId) public view returns(uint32, uint32[], uint256, uint48) {
+
+        uint256 totalPaid = SafeMath.safeMul(rounds[roundId].userTickets[user].length, rounds[roundId].ticketPrice);
+        return (roundId, rounds[roundId].userTickets[user], totalPaid, rounds[roundId].endTime);
     }
 
     function changeFounder(address newFounder) public onlyOwner {
@@ -332,22 +326,6 @@ contract EtherLotteryContract is Ownable {
         selfdestruct(owner);
     }
 
-    function uint2str(uint i) internal view returns (string){
-        if (i == 0) return "0";
-        uint j = i;
-        uint len;
-        while (j != 0){
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (i != 0){
-            bstr[k--] = byte(48 + i % 10);
-            i /= 10;
-        }
-        return string(bstr);
-    }
     function take(uint n, uint32[] array) internal returns(uint32[] result) {
         if (n > array.length) {
             return array;

@@ -348,59 +348,6 @@
   },
   {
     "constant": true,
-    "inputs": [],
-    "name": "getCurrentRoundInfo",
-    "outputs": [
-      {
-        "name": "roundTime",
-        "type": "uint48[2]"
-      },
-      {
-        "name": "pricePrize",
-        "type": "uint256[2]"
-      },
-      {
-        "name": "winCountNumber",
-        "type": "uint32[2]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "offset",
-        "type": "uint48"
-      },
-      {
-        "name": "limit",
-        "type": "uint48"
-      }
-    ],
-    "name": "getRounds",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint48[2][]"
-      },
-      {
-        "name": "",
-        "type": "uint256[2][]"
-      },
-      {
-        "name": "",
-        "type": "uint32[2][]"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
     "inputs": [
       {
         "name": "_id",
@@ -410,16 +357,32 @@
     "name": "getRoundInfo",
     "outputs": [
       {
-        "name": "roundTime",
-        "type": "uint48[2]"
+        "name": "roundId",
+        "type": "uint256"
       },
       {
-        "name": "pricePrize",
-        "type": "uint256[2]"
+        "name": "ticketPrice",
+        "type": "uint256"
       },
       {
-        "name": "winCountNumber",
-        "type": "uint32[2]"
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "name": "endTime",
+        "type": "uint256"
+      },
+      {
+        "name": "numberOfWinners",
+        "type": "uint48"
+      },
+      {
+        "name": "winPrize",
+        "type": "uint256"
+      },
+      {
+        "name": "winningNumber",
+        "type": "uint32"
       }
     ],
     "payable": false,
@@ -434,19 +397,46 @@
         "type": "address"
       }
     ],
-    "name": "getUserRecords",
+    "name": "getUserRounds",
     "outputs": [
       {
         "name": "roundIds",
         "type": "uint32[]"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
       },
       {
-        "name": "tickets",
-        "type": "string"
+        "name": "roundId",
+        "type": "uint32"
+      }
+    ],
+    "name": "getUserHistories",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32"
       },
       {
-        "name": "amounts",
-        "type": "uint256[]"
+        "name": "",
+        "type": "uint32[]"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint48"
       }
     ],
     "payable": false,

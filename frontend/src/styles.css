@@ -1,2 +1,26 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "style-countdown.css";
+.dot {
+  height: 30px;
+  width: 30px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  text-align: center;
+  padding: 2px 2px;
+  font-size: 18px;
+  margin: 5px 2px;
+
+}
+.dot-25 {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  text-align: center;
+  padding: 1px 1px;
+  font-size: 16px;
+  margin: 2px 1px;
+
+}

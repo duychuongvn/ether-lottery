@@ -8,6 +8,7 @@
     <h2 class="card-title">Current Prize: {{nextRound.prizeFormated}} CLO</h2>
     <h2 class="card-title">Ticket Price: {{nextRound.ticketPrice}}  CLO</h2>
     <h2 class="card-title">Estimated Difficult:  {{nextRound.estimateDifficult}} Digits (should display slide bar)</h2>
+    <h2 class="card-title">Winning chance: {{(1/ nextRound.currentRoundDigit) * 100}}%</h2>
     <a href="buy-ticket" class="btn btn-success">Buy Ticket</a>
   </div>
 </div>
@@ -29,11 +30,14 @@
       </thead>
     <tbody>
     <tr *ngFor="let round of rounds">
-      <td>{{round.id}}</td>
+      <td><a href="round/{{round.id}}">{{round.id}}</a></td>
       <td>{{round.closeTimeDisplay}}</td>
       <td>{{round.prizeFormated}} CLO</td>
-      <td>{{round.winningNumberFormated}}</td>
-      <th><a href="#">0x00</a></th>
+      <td><span class="dot-25" *ngFor="let number of round.winningNumber.ticketIterators">{{number}}</span></td>
+      <th>
+        <span *ngIf="round.totalWinners ==0">No winner found</span>
+        <span *ngIf="round.totalWinners >0"><a href="#">0x00</a></span>
+        </th>
     </tr>
     </tbody>
     </table>
@@ -41,8 +45,6 @@
 </div>
 <div>
   <button (click)="init()">Init Round</button>
-  <button (click)="buyTicket()">Buy</button>
-  <a href="buy-ticket">Buy Ticket</a>
 </div>
 </div>
 <br/>

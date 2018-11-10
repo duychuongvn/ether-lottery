@@ -2,23 +2,100 @@
   <div *ngIf="requiredSignMetamask" class="card">
     <div class="card card-header">Require login to metamask</div>
   </div>
-  <div *ngIf="!requiredSignMetamask" class="card">
+
+  <div class="container" *ngIf="!requiredSignMetamask">
+    <div class="card" *ngIf="round != null">
+      <div class="card-header">
+        <h5 class="card-title">{{round.closeTimeDisplay}}| Draw ID: #{{round.id}}</h5>
+
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Current Prize: {{round.prizeFormated}} CLO</h2>
+        <h2 class="card-title">Ticket Price: {{round.ticketPrice}}  CLO</h2>
+        <h2 class="card-title">Estimated Difficult:  {{round.estimateDifficult}} Digits (should display slide bar)</h2>
+        <h2 class="card-title">Winning chance: {{ round.winningChance}}%</h2>
+      </div>
+    </div>
+
+
+  <div  class="card">
     <div class="card-body">
-      <button class="btn btn-primary" (click)="addTicket()">Add More Ticket</button>
+      <button [disabled]="tickets.length>=10" class="btn btn-primary" (click)="addTicket()">Add More Ticket</button>
 
-    <ul>
-      <li *ngFor="let ticket of tickets" class="list-inline">
-      <span>
-    <input [(ngModel)]="ticket.ticketNumber" [required]="true" placeholder="00000000">
-      <a class="btn btn-link" (click)="removeTicket(ticket)">Remove</a>
-      </span>
-
-      </li>
-    </ul>
+      <table class="table table-borderless">
+        <thead>
+        <tr>
+        <th class="text-dark">No</th>
+        <th class="text-dark">Your Favourite Number</th>
+        <th class="text-dark"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ticket of tickets;index as i" >
+          <td><span class="text-dark">{{i+1}}</span></td>
+          <td> <input [(ngModel)]="ticket.ticketNumber" [required]="true" placeholder="00000000"/>
+          <!--<a class="btn btn-lg" (click)="removeTicket(ticket)">Remove</a>-->
+          </td>
+        </tr>
+        </tbody>
+      </table>
 
       <button class="btn btn-success" (click)="buyTicket()"> Buy</button>
     </div>
 
   </div>
+
+</div>
+  <br>
+</div>
+<div *ngIf="round != null && buyingTicket != null" class="confirm-buy-ticket">
+  <!-- Modal section -->
+  <div class="backdrop" [ngStyle]="{'display':modal.display}"></div>
+
+  <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':modal.display}">
+
+    <div class="modal-dialog" role="document">
+
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h6 class="modal-title">Review your payment</h6>
+          <button type="button" class="close" aria-label="Close" (click)="onCloseHandled()"><span aria-hidden="true">&times;</span></button>
+
+        </div>
+
+        <div class="modal-body">
+          <p class="mb-0 subheading">Current Round: {{round.id}}</p>
+          <p class="mb-0 subheading">Ticket Price: {{round.ticketPrice}}</p>
+          <p class="mb-0 subheading">Number Of Tickets: {{buyingTicket.totalTicket}}</p>
+          <p class="mb-0 subheading">Total Pay: {{buyingTicket.totalPaid}}</p>
+          <div class="card-body">
+              <table class="table-borderless table-hover">
+                <thead>
+                  <th>Ticket Number</th>
+                </thead>
+                <tbody>
+                <tr *ngFor="let ticket of buyingTicket.tickets; index as i" >
+                  <td>
+                    <span *ngFor="let number of ticket.ticketIterators" class="dot">{{number}}</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" class="btn btn-success" (click)="confirmPayment()" >Confirm</button>
+          <button type="button" class="btn btn-default" (click)="onCloseHandled()" >Close</button>
+
+        </div>
+
+      </div><!-- /.modal-content -->
+
+    </div><!-- /.modal-dialog -->
+
+  </div><!-- /.modal !-->
 
 </div>

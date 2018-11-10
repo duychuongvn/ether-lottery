@@ -1,0 +1,29 @@
+<div class="container">
+  <ul *ngIf="userHistories != null">
+    <li *ngFor="let history of userHistories.content" class="list-inline">
+      <div class="card">
+        <div class="card-header">
+          <p class="card-text">Round: #{{history.roundId}}  - Time: {{history.roundTimeDisplay}}</p>
+          <p class="card-text">Paid Amount: {{history.getFormatPaidAmount}}</p>
+        </div>
+        <div class="card-body">
+
+          <table class="table-borderless">
+            <thead>
+            <th>Ticket Number</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let ticket of history.ticketNumbers; index as i" >
+              <td>
+                <span *ngFor="let number of ticket.ticketIterators" class="dot">{{number}}</span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      <br>
+    </li>
+  </ul>
+</div>
