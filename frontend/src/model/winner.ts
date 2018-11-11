@@ -1,3 +1,5 @@
+import {NumberUtil} from "../util/number-util";
+
 export class Winner {
   private _address: string
   private _roundId: number
@@ -32,6 +34,12 @@ export class Winner {
   get received(): number {
     return this._received;
   }
+  get receivedString(): string {
+    return NumberUtil.currencyFormat(this._received);
+  }
+
+
+
 
   set received(value: number) {
     this._received = value;

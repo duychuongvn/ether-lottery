@@ -115,7 +115,7 @@ export class ContractService {
     round.closeTimeDisplay = DateTime.fromMillis(round.closeTime * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
     round.winningNumber = new Ticket(result[4].toNumber()+"")
     round.prize = NumberUtil.toEther((result[5].toNumber()));
-    round.totalPaid = result[6].toNumber();
+    round.totalPaid = NumberUtil.toEther(result[6].toNumber());
     for(let i=0;i<result[7].length;i++) {
       let winner = new Winner();
       winner.address = result[7][i];

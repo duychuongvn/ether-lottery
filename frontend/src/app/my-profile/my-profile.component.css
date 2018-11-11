@@ -1,0 +1,6 @@
+.ticket:nth-child(odd) {
+  background-color: azure;
+}
+.ticket:nth-child(even) {
+  background-color: antiquewhite;
+}

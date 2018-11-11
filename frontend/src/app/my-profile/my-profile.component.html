@@ -6,22 +6,27 @@
           <p class="card-text">Round: #{{history.roundId}}  - Time: {{history.roundTimeDisplay}}</p>
           <p class="card-text">Paid Amount: {{history.getFormatPaidAmount}}</p>
         </div>
-        <div class="card-body">
-
-          <table class="table table-bordered">
-            <thead>
-            <td class="text-dark" style="width: 5%">No</td>
-            <th class="text-dark">Ticket Number</th>
-            </thead>
-            <tbody>
-            <tr *ngFor="let ticket of history.ticketNumbers; index as i">
-              <td>{{i+1}}</td>
-              <td>
-                <span *ngFor="let number of ticket.ticketIterators" class="dot">{{number}}</span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+        <div class="card-group">
+          <div class="card ticket" *ngFor="let ticket of history.ticketNumbers; index as i">
+            <span class="card-title">{{i+1}}</span>
+            <div class="card-body">
+             <span *ngFor="let number of ticket.ticketIterators" class="dot-25">{{number}}</span>
+           </div>
+          </div>
+          <!--<table class="table table-bordered">-->
+            <!--<thead>-->
+            <!--<td class="text-dark" style="width: 5%">No</td>-->
+            <!--<th class="text-dark">Ticket Number</th>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr *ngFor="let ticket of history.ticketNumbers; index as i">-->
+              <!--<td>{{i+1}}</td>-->
+              <!--<td>-->
+                <!--<span *ngFor="let number of ticket.ticketIterators" class="dot">{{number}}</span>-->
+              <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+          <!--</table>-->
 
         </div>
       </div>

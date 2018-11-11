@@ -272,8 +272,8 @@ contract EtherLotteryContract is Ownable {
 
     function finish() private {
 
-      //  lastWinTicketNumber = (random() << 2) % 1000000; //  uncomment when goline, ticket number is from 0-999999
-        lastWinTicketNumber = random() % getRoundDifficult();
+        lastWinTicketNumber = (random() << 2) % 10; //  uncomment when goline, ticket number is from 0-999999
+//        lastWinTicketNumber = random() % getRoundDifficult();
 
         rounds[_roundId].winPrize = address(this).balance;
         rounds[_roundId].finishBlock = block.number;
