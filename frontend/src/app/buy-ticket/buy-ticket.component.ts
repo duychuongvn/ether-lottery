@@ -41,6 +41,10 @@ export class BuyTicketComponent implements OnInit {
       this.cdr.detectChanges();
       this.buyingTicket = new BuyingTicket(round.ticketPrice);
     })
+    this.contractService.isUserConnectingToNetwork().subscribe(connected => {
+      this.requiredSignMetamask = !connected;
+      this.cdr.detectChanges();
+    })
   }
 
   addTicket() : void{
@@ -60,11 +64,12 @@ export class BuyTicketComponent implements OnInit {
   confirmPayment() : void {
     this.contractService.buyTickets(this.address, this.buyingTicket.tickets).subscribe(result=>{
       this.onCloseHandled();
+
     })
-    this.modal.display = 'block';
   }
 
   onCloseHandled():void{
     this.modal.display = 'none';
+    this.cdr.detectChanges();
   }
 }

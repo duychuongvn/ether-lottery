@@ -17,14 +17,18 @@ export class MyProfileComponent implements OnInit {
               private web3Service: Web3ProviderService,
               private cdr: ChangeDetectorRef) { }
 
-  userHistories: Page<UserHistory>
+  userHistories: Page<UserHistory>;
+  requiredSignMetamask: boolean;
   address:any;
   ngOnInit() {
     this.web3Service.getSelectedAddress().subscribe((addr:any)=>{
       this.address = addr;
       this.loadUserHistory();
     })
-
+    this.contractService.isUserConnectingToNetwork().subscribe(connected => {
+      this.requiredSignMetamask = !connected;
+      this.cdr.detectChanges();
+    })
 
   }
 

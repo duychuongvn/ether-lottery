@@ -9,13 +9,16 @@
     <h2 class="card-title">Ticket Price: {{nextRound.ticketPriceDisplay}}  {{appInfo.symbol}}</h2>
     <h2 class="card-title">Estimated Difficult:
       <div class="slidecontainer">
+
         <span class="text-center">1</span>
-        <input disabled type="range" id="range" min="1" max="8" value="{{nextRound.estimateDifficult}}" class="slider" >
-        <label for="range">8 Digits</label>
+        <input  disabled type="range" id="range" min="1" max="8" value="{{nextRound.estimateDifficult}}" class="slider" >
+        <span for="range">8 Digits</span>
+        <br/>
+        <span class="text-danger text-md-left">The winning number will be less than or equals {{nextRound.estimateDifficult}} digits with current difficult</span>
       </div>
     </h2>
     <h2 class="card-title">Winning chance: {{(1/ nextRound.currentRoundDigit) * 100}}%</h2>
-    <a href="buy-ticket" class="btn btn-success">Buy Ticket</a>
+    <a  href="buy-ticket" class="btn btn-success">Buy Ticket</a>
   </div>
 </div>
 <br/>

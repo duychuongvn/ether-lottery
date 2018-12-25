@@ -1,4 +1,7 @@
-<div class="container">
+<div class="container" *ngIf="requiredSignMetamask">
+  <app-metamask></app-metamask>
+</div>
+<div class="container" *ngIf="!requiredSignMetamask">
   <ul *ngIf="userHistories != null">
     <li *ngFor="let history of userHistories.content" class="list-inline">
       <div class="card">

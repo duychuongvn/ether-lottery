@@ -13,6 +13,7 @@ import { ModalNetworkComponent } from './modal-network/modal-network.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { RoundHistoryComponent } from './round-history/round-history.component';
 import { AdminComponent } from './admin/admin.component';
+import { MetamaskComponent } from './metamask/metamask.component';
 
 
 const appRoutes: Routes = [
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
     ModalNetworkComponent,
     MyProfileComponent,
     RoundHistoryComponent,
-    AdminComponent
+    AdminComponent,
+    MetamaskComponent
   ],
   imports: [
     BrowserModule,

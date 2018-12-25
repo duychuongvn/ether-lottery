@@ -6,7 +6,7 @@ export class Round {
   id: number;
   openTime: number;
   openTimeDisplay: string;
-  closeTime: number;
+  closeTime = 0 as  number;
   closeTimeDisplay: string;
   winningNumber:Ticket;
   ticketPrice:number;
@@ -41,5 +41,11 @@ export class Round {
 
   get totalWinners():number {
     return this.winners.length;
+  }
+
+  get isFinished():boolean {
+    console.log(this.closeTime)
+    console.log(this.closeTime < new Date().getTime() /1000)
+    return this.closeTime < new Date().getTime() /1000;
   }
 }

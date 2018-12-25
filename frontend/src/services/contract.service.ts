@@ -15,9 +15,6 @@ import {Winner} from "../model/winner";
 declare const require: any;
 const contractABI = require('../assets/contracts/EtherLotteryABI.json');
 
-const _uniq = require('lodash/uniq');
-
-
 
 declare const window: any;
 @Injectable({
@@ -28,20 +25,36 @@ export class ContractService {
   pageSize = 10 as number;
   address: any;
   contract: any;
+  contractRead:any;
   constructor(private web3ProviderService: Web3ProviderService) {
 
     this.init();
   }
   init(): void{
-
+    const etherContractRead = this.web3ProviderService.web3Read.eth.contract(contractABI);
+    this.contractRead = etherContractRead.at(environment.contactAddress);
     if(window.web3) {
       const etherContract = window.web3.eth.contract(contractABI);
       this.contract = etherContract.at(environment.contactAddress);
-      let state = window.web3.currentProvider.publicConfigStore.getState();
-
-        this.address = state.selectedAddress
-
     }
+  }
+
+  isUserConnectingToNetwork() :Observable<boolean> {
+    return Observable.create((observable:any)=>{
+      // some networks use same network version with Ethereum so we have to work around to check the contract is deployed on
+      // selected network or not
+      if(window.web3) {
+        window.web3.eth.getCode(environment.contactAddress, (e,r)=>{
+          observable.next( r != '0x');
+          observable.complete();
+        });
+      } else {
+        observable.next(false);
+        observable.complete();
+      }
+
+    })
+
   }
 
   initRound(owner:any,amount: number):void{
@@ -72,7 +85,12 @@ export class ContractService {
     return Observable.create((observe: any) => {
 
       return window.web3.eth.getBalance(this.contract.address, (err:any,success:any) => {
-        observe.next(success.toNumber());
+        if(err) {
+          observe.error(err);
+        } else {
+          observe.next(success.toNumber());
+        }
+
         observe.complete();
       });
     });
@@ -82,9 +100,13 @@ export class ContractService {
   getCurrentRound() : Observable<Round> {
     //getRoundDifficult
     return Observable.create((observe: any) => {
-      this.contract._roundId.call((err:any, roundId:any)=>{
+      this.contractRead._roundId.call((err:any, roundId:any)=>{
        this.getRoundInfo(roundId).subscribe(round=>{
-         observe.next(round);
+         if(err) {
+           observe.error(err);
+         } else {
+           observe.next(round);
+         }
          observe.complete();
        })
       })
@@ -93,15 +115,30 @@ export class ContractService {
 
   getRoundInfo(roundId:number):Observable<Round> {
     return Observable.create((observe:any)=>{
-      this.contract.getRoundInfo.call(roundId,(err:any, result:any)=>{
-        let round = this.extractedRounInfo(result);
-        this.contract.getRoundDifficult((err:any, result:any)=>{
-          let length = 0;
-          let diff = parseInt(result.toNumber()) as number;
-          round.currentRoundDigit = result.toNumber();
-          observe.next(round);
+      this.contractRead.getRoundInfo.call(roundId,(err:any, result:any)=>{
+
+        if(err) {
+          observe.error(err);
           observe.complete();
-        })
+        } else {
+          let round = this.extractedRounInfo(result);
+          this.contractRead.getRoundDifficult.call((err:any, result:any)=>{
+            console.log('diff',err, result.toNumber())
+            if(err) {
+              observe.error(err);
+              observe.complete();
+            } else {
+              let length = 0;
+              let diff = parseInt(result.toNumber()) as number;
+              round.currentRoundDigit = result.toNumber();
+              observe.next(round);
+              observe.complete();
+            }
+
+          })
+
+        }
+
 
       })
     })
@@ -132,7 +169,12 @@ export class ContractService {
 
     return Observable.create((observable:any)=>{
       let rounds= [] as Round[];
-      this.contract._roundId.call((err:any, roundId:any)=>{
+      this.contractRead._roundId.call((err:any, roundId:any)=>{
+        if(err) {
+          observable.error(err);
+        } else {
+
+
           let count = 0
           let _roundId = roundId.toNumber();
           let limit = this.pageSize;
@@ -140,20 +182,25 @@ export class ContractService {
             limit = _roundId;
           }
 
-         let obsers = [] as Observable<Round>[];
-          for(let _i = _roundId - offset - 1; _i > 0 && count <limit;_i--) {
-          obsers.push(Observable.create((ob)=>{
-            this.contract.getRoundInfo.call(_i,(err:any, result:any)=> {
-              let round = this.extractedRounInfo(result);
-              ob.next(round)
-              ob.complete();
-              })
-            }));
-          }
-        forkJoin(obsers).subscribe((rounds: Round[])=>{
-          observable.next(rounds)
-          observable.complete();
-        })
+           let obsers = [] as Observable<Round>[];
+            for(let _i = _roundId - offset - 1; _i > 0 && count <limit;_i--) {
+            obsers.push(Observable.create((ob)=>{
+              this.contractRead.getRoundInfo.call(_i,(err:any, result:any)=> {
+                if(err) {
+                  ob.error(err);
+                } else {
+                  let round = this.extractedRounInfo(result);
+                  ob.next(round)
+                }
+                ob.complete();
+                })
+              }));
+            }
+          forkJoin(obsers).subscribe((rounds: Round[])=>{
+            observable.next(rounds)
+            observable.complete();
+          })
+        }
       })
 
 
@@ -162,28 +209,39 @@ export class ContractService {
 
   getUserHistories(address:string, pageRequest:PageRequest): Observable<Page<UserHistory>> {
     return Observable.create((obser:any)=>{
-      this.contract.getUserRounds(address,(err:any, result:any)=>{
-         let totalRecords = result.length;
-        let obsers = [] as Observable<UserHistory>[];
-         for(let i = pageRequest.getLimit(totalRecords) -1;  i >=pageRequest.getOffset();i--) {
-           obsers.push(Observable.create((observe:any)=>{
-             this.contract.getUserHistories.call(address, result[i],(err:any, hisotry:any)=>{
-               let userHistory = new UserHistory();
-               userHistory.roundId = hisotry[0].toNumber();
-               userHistory.paidAmount = NumberUtil.toEther(hisotry[2].toNumber());
-               userHistory.roundTime = hisotry[3].toNumber();
-               for(let i = 0;i<hisotry[1].length;i++) {
-                 userHistory.ticketNumbers.push(new Ticket(hisotry[1][i].toNumber()+""));
-               }
-               observe.next(userHistory);
-               observe.complete();
-             });
-           }));
-         }
-        forkJoin(obsers).subscribe((userHistories: UserHistory[])=>{
-          obser.next(new Page<UserHistory>(totalRecords, pageRequest, userHistories))
+      this.contractRead.getUserRounds(address,(err:any, result:any)=>{
+        if(err){
+          obser.error(err);
           obser.complete();
-        })
+        } else  {
+          let totalRecords = result.length;
+          let obsers = [] as Observable<UserHistory>[];
+          for(let i = pageRequest.getLimit(totalRecords) -1;  i >=pageRequest.getOffset();i--) {
+            obsers.push(Observable.create((observe:any)=>{
+              this.contractRead.getUserHistories.call(address, result[i],(err:any, hisotry:any)=>{
+                if(err) {
+                  observe.error(err);
+
+                } else {
+                  let userHistory = new UserHistory();
+                  userHistory.roundId = hisotry[0].toNumber();
+                  userHistory.paidAmount = NumberUtil.toEther(hisotry[2].toNumber());
+                  userHistory.roundTime = hisotry[3].toNumber();
+                  for(let i = 0;i<hisotry[1].length;i++) {
+                    userHistory.ticketNumbers.push(new Ticket(hisotry[1][i].toNumber()+""));
+                  }
+                  observe.next(userHistory);
+
+                }
+                observe.complete();
+              });
+            }));
+          }
+          forkJoin(obsers).subscribe((userHistories: UserHistory[])=>{
+            obser.next(new Page<UserHistory>(totalRecords, pageRequest, userHistories))
+            obser.complete();
+          })
+        }
       })
     });
   }

@@ -1,6 +1,6 @@
 <div class="container content">
   <div *ngIf="requiredSignMetamask" class="card">
-    <div class="card card-header">Require login to metamask</div>
+    <app-metamask></app-metamask>
   </div>
 
   <div class="container" *ngIf="!requiredSignMetamask">
@@ -22,7 +22,7 @@
         </div>
         <h2 class="card-title">Winning chance: {{ round.winningChance}}%</h2>
       </div>
-    </div>
+
 
 
   <div  class="card">
@@ -107,4 +107,5 @@
 
   </div><!-- /.modal !-->
 
+</div>
 </div>
