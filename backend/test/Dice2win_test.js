@@ -42,12 +42,12 @@ describe('Test', async () => {
         beforeEach('setup contract for each test', async () => {
             contract = await Dice2WinContract.new();
             //
-            //
-            //
-            // contract.Commit().watch((err, res)=>{
-            //     console.log("Number: "+res.args.commit.toNumber());
-            //
-            // }) ;
+
+
+            contract.Commit().watch((err, res)=>{
+                console.log("Number: "+res.args.commit.toNumber());
+
+            }) ;
             // contract.CheckLog().watch((err, res)=>{
             //     console.log("Block: "+res.args.reveal.toNumber());
             //     console.log("Commit: "+res.args.commit.toNumber());
@@ -55,10 +55,10 @@ describe('Test', async () => {
             //
             // }) ;
 
-            // contract.Payment().watch((err, res)=>{
-            //     console.log("beneficiary: "+res.args.beneficiary);
-            //     console.log("amount: "+res.args.amount.toNumber());
-            // })
+            contract.Payment().watch((err, res)=>{
+                console.log("beneficiary: "+res.args.beneficiary);
+                console.log("amount: "+res.args.amount.toNumber());
+            })
 
 
         })
@@ -76,23 +76,8 @@ describe('Test', async () => {
               // contract.fallback({value: 1000000000000000000});
            try {
 
+               await contract.placeBet([0x1fffffffff1fffffffff1fffffffff1fffffffff1fffffffff1fffffffff,0x1fffffffff1fffffffff1fffffffff1fffffffff1fffffffff1fffffffff],15, 1000, '0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6', 0xc, 0xa, {value: 10000000000000000000});
 
-               await contract.placeBet([15,51], [37,37], [10000000000000000, 10000000000000000], 1000, '0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6', 0xc, 0xa, {value: 20000000000000000});
-               contract.getBetInfo('0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6').then(r=>{
-                   for(let i = 0; i<r[0].length;i++) {
-                       console.log("Amount: ", r[0][i].toNumber());
-                       console.log("Modulo: ", r[1][i].toNumber());
-                       console.log("Mask: ", r[2][i].toNumber());
-                       console.log("Rollunder: ", r[3][i].toNumber());
-                   }
-                   console.log("Gambler", r[4])
-                   console.log("Placed block", r[5].toNumber())
-
-                   let blockHash = web3.eth.getBlock(r[5].toNumber()).hash;
-
-                   console.log(blockHash)
-                   contract.settleBet(1, blockHash)
-               })
            }catch (e) {
                console.log(e)
            }
