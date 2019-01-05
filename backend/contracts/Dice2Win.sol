@@ -121,8 +121,8 @@ contract Dice2Win {
     // Constructor. Deliberately does not take any parameters.
     constructor () public {
         owner = msg.sender;
-        secretSigner = msg.sender;
-        croupier = msg.sender;
+        secretSigner = 0x911eac91a26019f968bbba2a7b7aaa9afa12ab3d;
+        croupier = 0x627306090abab3a6e1400e9345bc60c78a8bef57;
     }
 
     // Standard modifier on methods invokable only by contract owner.
@@ -237,8 +237,7 @@ contract Dice2Win {
         // Check that commit is valid - it has not expired and its signature is valid.
         require (block.number <= commitLastBlock, "Commit has expired.");
         bytes32 signatureHash = keccak256(abi.encodePacked(uint40(commitLastBlock), commit));
-        //  require (secretSigner == ecrecover(signatureHash, 27, r, s), "ECDSA signature is not valid.");
-
+        require (secretSigner == ecrecover(signatureHash, 27, r, s), "ECDSA signature is not valid.");
         uint rollUnder;
 
         // Winning amount and jackpot increase.
@@ -354,7 +353,7 @@ contract Dice2Win {
         require (block.number > placeBlockNumber, "settleBet in the same block as placeBet, or before.");
         require (block.number <= placeBlockNumber + BET_EXPIRATION_BLOCKS, "Blockhash can't be queried by EVM.");
         require (blockhash(placeBlockNumber) == blockHash);
-//        emit LogCommit(commit);
+        emit LogCommit(commit);
         // Settle bet using reveal and blockHash as entropy sources.
         settleBetCommon(bet, reveal, blockHash);
     }
