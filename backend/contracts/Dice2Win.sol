@@ -354,7 +354,6 @@ contract Dice2Win {
         require (block.number <= placeBlockNumber + BET_EXPIRATION_BLOCKS, "Blockhash can't be queried by EVM.");
         require (blockhash(placeBlockNumber) == blockHash);
         emit LogCommit(commit);
-        // Settle bet using reveal and blockHash as entropy sources.
         settleBetCommon(bet, reveal, blockHash);
     }
 
@@ -449,14 +448,10 @@ contract Dice2Win {
         uint[] memory  amounts;
         (masks, amounts) = getNumbers(bet.mask, bet.creditMask);
         uint result = 2 ** dice;
-        emit Commit(result);
         for(uint i= 0;i < masks.length;i++) {
 
             if (result & masks[i] != 0) {
-
                 (possibleWinAmountPart, jackpotFeePart) = getDiceWinAmount(amounts[i], 36, ((masks[i] * POPCNT_MULT) & POPCNT_MASK) % POPCNT_MODULO);
-                emit LogCommit(possibleWinAmountPart);
-                emit LogCommit(amounts[i]);
                 diceWinAmount += possibleWinAmountPart;
                 _jackpotFee += jackpotFeePart;
             }
@@ -513,7 +508,7 @@ contract Dice2Win {
         if (beneficiary.send(amount)) {
             emit Payment(beneficiary, successLogAmount);
         } else {
-            emit FailedPayment(beneficiary, address(this).balance);
+            emit FailedPayment(beneficiary, amount);
         }
     }
 
