@@ -268,13 +268,13 @@ contract Dice2Win {
 
 
         // Enforce max profit limit.
-        //        require (possibleWinAmount <= amount + maxProfit, "maxProfit limit violation.");
+        require (possibleWinAmount <= amount + maxProfit, "maxProfit limit violation.");
         // Lock funds.
         lockedInBets += uint128(possibleWinAmount);
         jackpotSize += uint128(jackpotFee);
 
         // Check whether contract has enough funds to process this bet.
-        //        require (jackpotSize + lockedInBets <= address(this).balance, "Cannot afford to lose this bet.");
+        require (jackpotSize + lockedInBets <= address(this).balance, "Cannot afford to lose this bet.");
 
         // Record commit in logs.
         emit Commit(commit);
